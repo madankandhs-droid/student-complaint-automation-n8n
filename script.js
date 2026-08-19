@@ -1,4 +1,4 @@
-const N8N_WEBHOOK_URL = "https://madann8n.app.n8n.cloud/webhook-test/student-complaint";
+const N8N_WEBHOOK_URL = "Your test URL";
 
 const form = document.getElementById("complaintForm");
 const button = document.getElementById("submitBtn");
@@ -15,7 +15,7 @@ complaint.addEventListener("input", () => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  if (N8N_WEBHOOK_URL === "https://madann8n.app.n8n.cloud/webhook/student-complaint") {
+  if (N8N_WEBHOOK_URL === "Your production link") {
     showMessage("Add your n8n Webhook URL in script.js before testing.", "error");
     return;
   }
