@@ -1,0 +1,267 @@
+{
+  "name": "AI student complaint automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "student-complaint",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        -48
+      ],
+      "id": "4e6c2d80-242c-4590-8862-be5148160dc5",
+      "name": "Webhook",
+      "webhookId": "4f71cb85-4eec-4768-9934-96018dfeeb4c"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this student complaint:\n\nComplaint:\n{{$json.body.complaint}}\n\nStudent Department:\n{{$json.body.department}}\n\nLocation:\n{{$json.body.location}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI assistant for a college student complaint management system.\n\nAnalyze every student complaint.\n\nDetermine:\n\n1. category\n2. priority\n3. department\n4. reason\n5. recommended_action\n\nAllowed categories:\nAcademic\nHardware\nSoftware\nNetwork\nInfrastructure\nAdministration\nOther\n\nAllowed priorities:\nLow\nMedium\nHigh\nCritical\n\nReturn only the requested structured fields.\n\nPriority guidelines:\n- Low: Minor issue that does not require immediate attention.\n- Medium: Issue affecting normal student activities.\n- High: Serious issue affecting classes, labs, examinations, or many students.\n- Critical: Emergency or major failure requiring immediate intervention."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        320,
+        -48
+      ],
+      "id": "aece65dd-b9c1-46d8-809b-3c00ea96a749",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        160
+      ],
+      "id": "3382ce7a-fe68-4f9b-b30e-182e2b9732e9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lQousnYvE6aIzBus",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"category\": \"Network\",\n  \"priority\": \"Medium\",\n  \"department\": \"IT / Network Department\",\n  \"reason\": \"Wi-Fi connectivity problem in Lab 3\",\n  \"recommended_action\": \"Inspect the wireless access point and network connection\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        160
+      ],
+      "id": "5ab9c6fc-edbb-465e-b963-235f81cd88eb",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.output.priority}}",
+                    "rightValue": "High",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2bd678ea-c9ba-4c39-a134-4534e726f43c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "High priority"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4333326e-c14c-4393-92cb-a12b383e4c86",
+                    "leftValue": "={{$json.output.priority}}",
+                    "rightValue": "Critical",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Critical Priority"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3b1c31ba-9c7c-438e-aa2a-930d9ea3be3e",
+                    "leftValue": "={{$json.output.priority}}",
+                    "rightValue": "Medium",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Medium Priority"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        688,
+        -48
+      ],
+      "id": "6bf128a2-ee40-4cfe-9574-3985b7af413a",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "fromEmail": "madankandhg@gmail.com",
+        "toEmail": "madankandhg@gmail.com",
+        "subject": "🚨 High Priority Student Complaint",
+        "html": "=<p><b>Student: </b>{{$node[\"Webhook\"].json[\"body\"][\"student_name\"]}}</p>\n\n<p><b>Mail ID: </b>{{$node[\"Webhook\"].json[\"body\"][\"email\"]}}</p>\n\n<p><b>Department:</b> {{$node[\"Webhook\"].json[\"body\"][\"department\"]}}</p>\n\n<p><b>Location:</b> {{$node[\"Webhook\"].json[\"body\"][\"location\"]}}</p>\n\n<p><b>Complaint:</b> {{$node[\"Webhook\"].json[\"body\"][\"complaint\"]}}</p>\n<p><b>Category:</b> {{$json.output.category}}</p>\n<p><b>Priority:</b> {{$json.output.priority}}</p>\n<p><b>Responsible Department:</b> {{$json.output.department}}</p>\n<p><b>Reason:</b> {{$json.output.reason}}</p>\n<p><b>Recommended Action:</b> {{$json.output.recommended_action}}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        912,
+        -144
+      ],
+      "id": "c518e59c-03d4-40be-99dd-7555188fa76e",
+      "name": "Send an Email",
+      "webhookId": "5e538806-601c-49ca-baae-f0a53804b8cf",
+      "credentials": {
+        "smtp": {
+          "id": "yneXNKQOp933pW1S",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "59ca3b8a-82fe-4755-af4d-594ba7d77503",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b30ba41f5063d26a278f440cfc6ba3b56b3f63adc8eff754c70dff4658a88670"
+  },
+  "nodeGroups": [],
+  "id": "yLqD6ECAIMAZEg8P",
+  "tags": []
+}
