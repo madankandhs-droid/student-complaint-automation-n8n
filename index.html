@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusCare | Student Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-glow glow-one"></div>
+  <div class="page-glow glow-two"></div>
+
+  <header class="navbar">
+    <a class="brand" href="#">
+      <div class="brand-mark">C</div>
+      <div>
+        <strong>CampusCare</strong>
+        <span>Student Support Portal</span>
+      </div>
+    </a>
+    <div class="nav-pill"><span></span> Support is available</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span>✦</span> YOUR VOICE MATTERS</div>
+        <h1>Got a problem on campus?<br><em>Let us know.</em></h1>
+        <p class="hero-text">Tell us what happened. Our smart support system will understand your complaint, prioritize it and send it to the right team.</p>
+        <div class="trust-row">
+          <div><b>01</b><span>Submit easily</span></div>
+          <div><b>02</b><span>AI sorts it</span></div>
+          <div><b>03</b><span>Team responds</span></div>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <div class="orbit orbit-a"></div>
+        <div class="orbit orbit-b"></div>
+        <div class="spark spark-a">✦</div>
+        <div class="spark spark-b">✦</div>
+        <div class="illustration-card">
+          <div class="bubble bubble-one">Need help?</div>
+          <div class="person">
+            <div class="head"></div>
+            <div class="body-shape"></div>
+            <div class="arm"></div>
+          </div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="mini-line"></div>
+              <div class="mini-line short"></div>
+              <div class="mini-check">✓</div>
+            </div>
+          </div>
+          <div class="bubble bubble-two">We’re listening.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-wrap">
+      <div class="form-heading">
+        <div>
+          <div class="section-label">COMPLAINT FORM</div>
+          <h2>Tell us what’s going on</h2>
+          <p>It only takes a minute. Please provide enough detail for us to help.</p>
+        </div>
+        <div class="secure-badge">🔒 Private & secure</div>
+      </div>
+
+      <form id="complaintForm">
+        <div class="form-grid">
+          <label>
+            <span>Student name</span>
+            <input id="student_name" type="text" placeholder="Your full name" required>
+          </label>
+
+          <label>
+            <span>Email address</span>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </label>
+
+          <label>
+            <span>Department</span>
+            <select id="department" required>
+              <option value="">Choose your department</option>
+              <option>ECE</option><option>CSE</option><option>EEE</option>
+              <option>MECH</option><option>CIVIL</option><option>IT</option>
+              <option>AI & DS</option><option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Where did it happen?</span>
+            <input id="location" type="text" placeholder="e.g. Lab 3 / Block A" required>
+          </label>
+        </div>
+
+        <label class="full">
+          <span>Describe your complaint</span>
+          <textarea id="complaint" rows="6" placeholder="Explain the issue clearly. What happened, where, and when?" required></textarea>
+          <small id="counter">0 / 500 characters</small>
+        </label>
+
+        <div class="tip">
+          <div class="tip-icon">💡</div>
+          <div><strong>Tip</strong><p>Adding details like the location, time and impact helps management resolve your complaint faster.</p></div>
+        </div>
+
+        <button id="submitBtn" type="submit">
+          <span id="btnText">Submit complaint</span>
+          <span class="arrow">→</span>
+          <span id="spinner" class="spinner hidden"></span>
+        </button>
+      </form>
+
+      <div id="message" class="message hidden"></div>
+    </section>
+
+    <section class="how-section">
+      <div class="section-label">HOW IT WORKS</div>
+      <h2>From complaint to action</h2>
+      <div class="process">
+        <div class="process-item">
+          <div class="number">1</div><div><strong>You tell us</strong><p>Submit your concern through the portal.</p></div>
+        </div>
+        <div class="connector"></div>
+        <div class="process-item">
+          <div class="number">2</div><div><strong>AI understands</strong><p>Your complaint is categorized and prioritized.</p></div>
+        </div>
+        <div class="connector"></div>
+        <div class="process-item">
+          <div class="number">3</div><div><strong>Right team acts</strong><p>Management receives an automatic alert.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>CampusCare • AI-powered student complaint management</footer>
+  <script src="script.js"></script>
+</body>
+</html>
